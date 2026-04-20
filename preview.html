@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sakura</title>
+
+<!-- FUENTE ESTILO CANVA -->
+<link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:url('SakuraLogo.jpeg') no-repeat center center fixed;
+    background-size:cover;
+}
+
+.overlay{
+    min-height:100vh;
+    background:transparent;
+    padding-bottom:40px;
+}
+
+.logo{
+    text-align:center;
+    padding:20px;
+}
+
+.logo img{
+    max-width:220px;
+}
+
+/* GRID */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:20px;
+    padding:20px;
+}
+
+/* CARD */
+.card{
+    background:rgba(255,255,255,0.88);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 6px 16px rgba(0,0,0,.20);
+    transition:.25s;
+}
+
+.card:hover{
+    transform:scale(1.03);
+}
+
+.card img{
+    width:100%;
+    height:320px;
+    object-fit:cover;
+    cursor:pointer;
+}
+
+/* TITULO ESTILO CANVA */
+.nombre{
+    padding:12px;
+    text-align:center;
+    font-family:'Arial', cursive;
+    font-size:28px;
+    color:#111;
+    letter-spacing:1px;
+    text-shadow:2px 2px 4px rgba(0,0,0,.15);
+}
+
+/* MODAL */
+.modal{
+    display:none;
+    position:fixed;
+    z-index:999;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.92);
+}
+
+.modal img{
+    display:block;
+    margin:3% auto;
+    max-width:92%;
+    max-height:88%;
+}
+
+.cerrar{
+    position:absolute;
+    top:15px;
+    right:35px;
+    color:#fff;
+    font-size:45px;
+    cursor:pointer;
+}
+
+/* WHATSAPP */
+.whatsapp{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#25d366;
+    color:#fff;
+    border-radius:50%;
+    width:65px;
+    height:65px;
+    line-height:65px;
+    text-align:center;
+    font-size:30px;
+    text-decoration:none;
+    box-shadow:0 0 12px rgba(0,0,0,.30);
+    z-index:1000;
+}
+</style>
+</head>
+
+<body>
+
+<div class="overlay">
+
+<div class="logo">
+<img src="logo.jpeg" alt="Logo">
+</div>
+
+<div class="grid">
+
+<div class="card"><img src="gojo1.jpg" onclick="abrirModal(this)"><div class="nombre">Gojo 1</div></div>
+<div class="card"><img src="gojo2.jpg" onclick="abrirModal(this)"><div class="nombre">Gojo 2</div></div>
+<div class="card"><img src="sukuna1.jpg" onclick="abrirModal(this)"><div class="nombre">Sukuna 1</div></div>
+<div class="card"><img src="gojopower.jpg" onclick="abrirModal(this)"><div class="nombre">Gojo Power</div></div>
+<div class="card"><img src="gueto.jpg" onclick="abrirModal(this)"><div class="nombre">Gueto</div></div>
+<div class="card"><img src="shoto.jpg" onclick="abrirModal(this)"><div class="nombre">Shoto</div></div>
+<div class="card"><img src="luffydios.jpg" onclick="abrirModal(this)"><div class="nombre">Luffy Dios</div></div>
+<div class="card"><img src="itadori.jpg" onclick="abrirModal(this)"><div class="nombre">Itadori</div></div>
+<div class="card"><img src="sololeveling.jpg" onclick="abrirModal(this)"><div class="nombre">Solo Leveling</div></div>
+<div class="card"><img src="kenya.jpg" onclick="abrirModal(this)"><div class="nombre">Kenya</div></div>
+<div class="card"><img src="mitsuri.jpg" onclick="abrirModal(this)"><div class="nombre">Mitsuri</div></div>
+<div class="card"><img src="obanai.jpg" onclick="abrirModal(this)"><div class="nombre">Obanai</div></div>
+<div class="card"><img src="tokito.jpg" onclick="abrirModal(this)"><div class="nombre">Tokito</div></div>
+<div class="card"><img src="kokushibo.jpg" onclick="abrirModal(this)"><div class="nombre">Kokushibo</div></div>
+<div class="card"><img src="goku.jpg" onclick="abrirModal(this)"><div class="nombre">Goku</div></div>
+<div class="card"><img src="soro.jpg" onclick="abrirModal(this)"><div class="nombre">Soro</div></div>
+<div class="card"><img src="kaiju.jpg" onclick="abrirModal(this)"><div class="nombre">Kaiju</div></div>
+<div class="card"><img src="sukuna2.jpg" onclick="abrirModal(this)"><div class="nombre">Sukuna 2</div></div>
+<div class="card"><img src="luffy.jpg" onclick="abrirModal(this)"><div class="nombre">Luffy</div></div>
+<div class="card"><img src="ace.jpg" onclick="abrirModal(this)"><div class="nombre">Ace</div></div>
+<div class="card"><img src="brook.jpg" onclick="abrirModal(this)"><div class="nombre">Brook</div></div>
+<div class="card"><img src="gojo5.jpg" onclick="abrirModal(this)"><div class="nombre">Gojo 5</div></div>
+<div class="card"><img src="sukuna3.jpg" onclick="abrirModal(this)"><div class="nombre">Sukuna 3</div></div>
+<div class="card"><img src="zenitsu.jpg" onclick="abrirModal(this)"><div class="nombre">Zenitsu</div></div>
+<div class="card"><img src="inosuke.jpg" onclick="abrirModal(this)"><div class="nombre">Inosuke</div></div>
+<div class="card"><img src="akasa.jpg" onclick="abrirModal(this)"><div class="nombre">Akasa</div></div>
+<div class="card"><img src="toyi.jpg" onclick="abrirModal(this)"><div class="nombre">Toyi</div></div>
+<div class="card"><img src="tengen.jpg" onclick="abrirModal(this)"><div class="nombre">Tengen</div></div>
+<div class="card"><img src="slash.jpg" onclick="abrirModal(this)"><div class="nombre">Slash</div></div>
+<div class="card"><img src="acdc.jpg" onclick="abrirModal(this)"><div class="nombre">ACDC</div></div>
+<div class="card"><img src="ledzeppelin.jpg" onclick="abrirModal(this)"><div class="nombre">Led Zeppelin</div></div>
+<div class="card"><img src="misfits.jpg" onclick="abrirModal(this)"><div class="nombre">Misfits</div></div>
+<div class="card"><img src="ledzeppelin2.jpg" onclick="abrirModal(this)"><div class="nombre">Led Zeppelin 2</div></div>
+<div class="card"><img src="slash2.jpg" onclick="abrirModal(this)"><div class="nombre">Slash 2</div></div>
+<div class="card"><img src="motorhead.jpg" onclick="abrirModal(this)"><div class="nombre">Motorhead</div></div>
+<div class="card"><img src="slipknot.jpg" onclick="abrirModal(this)"><div class="nombre">Slipknot</div></div>
+<div class="card"><img src="ironmaiden2.jpg" onclick="abrirModal(this)"><div class="nombre">Iron Maiden 2</div></div>
+<div class="card"><img src="guns.jpg" onclick="abrirModal(this)"><div class="nombre">Guns</div></div>
+<div class="card"><img src="megadet.jpg" onclick="abrirModal(this)"><div class="nombre">Megadet</div></div>
+<div class="card"><img src="gorillaz.jpg" onclick="abrirModal(this)"><div class="nombre">Gorillaz</div></div>
+<div class="card"><img src="gunss.jpg" onclick="abrirModal(this)"><div class="nombre">Gunss</div></div>
+<div class="card"><img src="metalica.jpg" onclick="abrirModal(this)"><div class="nombre">Metalica</div></div>
+
+</div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal" onclick="cerrarModal()">
+<span class="cerrar">&times;</span>
+<img id="imgModal">
+</div>
+
+<!-- WHATSAPP -->
+<a class="whatsapp" href="https://wa.me/543815314712?text=Hola%20quiero%20consultar%20por%20las%20remeras" target="_blank">💬</a>
+
+<script>
+function abrirModal(img){
+    document.getElementById("modal").style.display="block";
+    document.getElementById("imgModal").src=img.src;
+}
+
+function cerrarModal(){
+    document.getElementById("modal").style.display="none";
+}
+</script>
+
+</body>
+</html>
