@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sakura — Remeras</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #0d0d0d url('SakuraLogo.jpeg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+  }
+
+  .overlay {
+    min-height: 100vh;
+    background: rgba(0,0,0,0.72);
+    padding-bottom: 80px;
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px 20px 20px;
+    gap: 10px;
+  }
+
+  header img.logo {
+    max-width: 180px;
+    filter: drop-shadow(0 0 18px rgba(255,180,200,0.4));
+  }
+
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+  }
+
+  /* FILTROS */
+  .filtros {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 20px 28px;
+  }
+
+  .filtros button {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: rgba(255,255,255,0.75);
+    border-radius: 999px;
+    padding: 7px 20px;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all .2s;
+    letter-spacing: 0.5px;
+  }
+
+  .filtros button:hover,
+  .filtros button.activo {
+    background: #e8265a;
+    border-color: #e8265a;
+    color: #fff;
+  }
+
+  /* GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 18px;
+    padding: 0 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* CARD */
+  .card {
+    background: rgba(20,20,20,0.82);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: transform .25s, box-shadow .25s;
+    cursor: pointer;
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+    border-color: rgba(232,38,90,0.5);
+  }
+
+  .card-img-wrap {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card img {
+    width: 100%;
+    height: 290px;
+    object-fit: cover;
+    display: block;
+    transition: transform .35s;
+  }
+
+  .card:hover img {
+    transform: scale(1.06);
+  }
+
+  .card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  /* BADGE CATEGORIA */
+  .badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 999px;
+    color: #fff;
+  }
+
+  .badge.anime  { background: #7c3aed; }
+  .badge.musica { background: #0891b2; }
+
+  /* INFO */
+  .card-info {
+    padding: 12px 14px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-nombre {
+    font-size: 14px;
+    font-weight: 500;
+    color: #f0f0f0;
+    line-height: 1.3;
+  }
+
+  .card-precio {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: #e8265a;
+    white-space: nowrap;
+    margin-left: 8px;
+  }
+
+  /* CONTADOR */
+  .contador {
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    margin: 0 20px 16px;
+    letter-spacing: 1px;
+  }
+
+  /* MODAL */
+  .modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: rgba(0,0,0,0.95);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .modal.open {
+    display: flex;
+  }
+
+  .modal img {
+    max-width: 90vw;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 10px;
+  }
+
+  .modal-info {
+    text-align: center;
+  }
+
+  .modal-nombre {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: #fff;
+    letter-spacing: 2px;
+  }
+
+  .modal-precio {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: #e8265a;
+  }
+
+  .cerrar {
+    position: absolute;
+    top: 18px;
+    right: 26px;
+    color: rgba(255,255,255,0.6);
+    font-size: 36px;
+    cursor: pointer;
+    line-height: 1;
+    transition: color .2s;
+    background: none;
+    border: none;
+  }
+
+  .cerrar:hover { color: #fff; }
+
+  .btn-consultar {
+    margin-top: 4px;
+    display: inline-block;
+    background: #25d366;
+    color: #fff;
+    padding: 11px 28px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: background .2s;
+  }
+
+  .btn-consultar:hover { background: #1ebe59; }
+
+  /* WHATSAPP FLOTANTE */
+  .whatsapp {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #25d366;
+    color: #fff;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    text-decoration: none;
+    box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+    z-index: 1000;
+    transition: transform .2s;
+  }
+
+  .whatsapp:hover { transform: scale(1.1); }
+
+  /* HIDDEN */
+  .card.oculta { display: none; }
+</style>
+</head>
+<body>
+
+<div class="overlay">
+
+  <header>
+    <img class="logo" src="logo.jpeg" alt="Sakura">
+    <h1>Remeras de diseño</h1>
+  </header>
+
+  <div class="filtros">
+    <button class="activo" onclick="filtrar('todos', this)">Todos</button>
+    <button onclick="filtrar('anime', this)">Anime</button>
+    <button onclick="filtrar('musica', this)">Música</button>
+  </div>
+
+  <p class="contador" id="contador"></p>
+
+  <div class="grid" id="grid">
+
+    <!-- ANIME -->
+    <div class="card" data-cat="anime" onclick="abrirModal('gojo1.jpg','Gojo 1')">
+      <div class="card-img-wrap">
+        <img src="gojo1.jpg" alt="Gojo 1" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Gojo 1</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('gojo2.jpg','Gojo 2')">
+      <div class="card-img-wrap">
+        <img src="gojo2.jpg" alt="Gojo 2" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Gojo 2</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('sukuna1.jpg','Sukuna 1')">
+      <div class="card-img-wrap">
+        <img src="sukuna1.jpg" alt="Sukuna 1" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Sukuna 1</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('gojopower.jpg','Gojo Power')">
+      <div class="card-img-wrap">
+        <img src="gojopower.jpg" alt="Gojo Power" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Gojo Power</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('gueto.jpg','Gueto')">
+      <div class="card-img-wrap">
+        <img src="gueto.jpg" alt="Gueto" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Gueto</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('shoto.jpg','Shoto')">
+      <div class="card-img-wrap">
+        <img src="shoto.jpg" alt="Shoto" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Shoto</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('luffydios.jpg','Luffy Dios')">
+      <div class="card-img-wrap">
+        <img src="luffydios.jpg" alt="Luffy Dios" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Luffy Dios</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('itadori.jpg','Itadori')">
+      <div class="card-img-wrap">
+        <img src="itadori.jpg" alt="Itadori" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Itadori</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('sololeveling.jpg','Solo Leveling')">
+      <div class="card-img-wrap">
+        <img src="sololeveling.jpg" alt="Solo Leveling" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Solo Leveling</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('kenya.jpg','Kenya')">
+      <div class="card-img-wrap">
+        <img src="kenya.jpg" alt="Kenya" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Kenya</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('mitsuri.jpg','Mitsuri')">
+      <div class="card-img-wrap">
+        <img src="mitsuri.jpg" alt="Mitsuri" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Mitsuri</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('obanai.jpg','Obanai')">
+      <div class="card-img-wrap">
+        <img src="obanai.jpg" alt="Obanai" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Obanai</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('tokito.jpg','Tokito')">
+      <div class="card-img-wrap">
+        <img src="tokito.jpg" alt="Tokito" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Tokito</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('kokushibo.jpg','Kokushibo')">
+      <div class="card-img-wrap">
+        <img src="kokushibo.jpg" alt="Kokushibo" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Kokushibo</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('goku.jpg','Goku')">
+      <div class="card-img-wrap">
+        <img src="goku.jpg" alt="Goku" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Goku</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('soro.jpg','Soro')">
+      <div class="card-img-wrap">
+        <img src="soro.jpg" alt="Soro" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Soro</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('kaiju.jpg','Kaiju')">
+      <div class="card-img-wrap">
+        <img src="kaiju.jpg" alt="Kaiju" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Kaiju</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('sukuna2.jpg','Sukuna 2')">
+      <div class="card-img-wrap">
+        <img src="sukuna2.jpg" alt="Sukuna 2" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Sukuna 2</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('luffy.jpg','Luffy')">
+      <div class="card-img-wrap">
+        <img src="luffy.jpg" alt="Luffy" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Luffy</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('ace.jpg','Ace')">
+      <div class="card-img-wrap">
+        <img src="ace.jpg" alt="Ace" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Ace</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('brook.jpg','Brook')">
+      <div class="card-img-wrap">
+        <img src="brook.jpg" alt="Brook" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Brook</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('gojo5.jpg','Gojo 5')">
+      <div class="card-img-wrap">
+        <img src="gojo5.jpg" alt="Gojo 5" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Gojo 5</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('sukuna3.jpg','Sukuna 3')">
+      <div class="card-img-wrap">
+        <img src="sukuna3.jpg" alt="Sukuna 3" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Sukuna 3</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('zenitsu.jpg','Zenitsu')">
+      <div class="card-img-wrap">
+        <img src="zenitsu.jpg" alt="Zenitsu" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Zenitsu</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('inosuke.jpg','Inosuke')">
+      <div class="card-img-wrap">
+        <img src="inosuke.jpg" alt="Inosuke" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Inosuke</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('akasa.jpg','Akasa')">
+      <div class="card-img-wrap">
+        <img src="akasa.jpg" alt="Akasa" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Akasa</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('toyi.jpg','Toyi')">
+      <div class="card-img-wrap">
+        <img src="toyi.jpg" alt="Toyi" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Toyi</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="anime" onclick="abrirModal('tengen.jpg','Tengen')">
+      <div class="card-img-wrap">
+        <img src="tengen.jpg" alt="Tengen" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge anime">Anime</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Tengen</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <!-- MUSICA -->
+    <div class="card" data-cat="musica" onclick="abrirModal('slash.jpg','Slash')">
+      <div class="card-img-wrap">
+        <img src="slash.jpg" alt="Slash" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge musica">Música</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Slash</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="musica" onclick="abrirModal('acdc.jpg','AC/DC')">
+      <div class="card-img-wrap">
+        <img src="acdc.jpg" alt="ACDC" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge musica">Música</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">AC/DC</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="musica" onclick="abrirModal('ledzeppelin.jpg','Led Zeppelin')">
+      <div class="card-img-wrap">
+        <img src="ledzeppelin.jpg" alt="Led Zeppelin" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge musica">Música</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Led Zeppelin</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="musica" onclick="abrirModal('misfits.jpg','Misfits')">
+      <div class="card-img-wrap">
+        <img src="misfits.jpg" alt="Misfits" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge musica">Música</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Misfits</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="musica" onclick="abrirModal('ledzeppelin2.jpg','Led Zeppelin 2')">
+      <div class="card-img-wrap">
+        <img src="ledzeppelin2.jpg" alt="Led Zeppelin 2" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge musica">Música</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Led Zeppelin 2</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="musica" onclick="abrirModal('slash2.jpg','Slash 2')">
+      <div class="card-img-wrap">
+        <img src="slash2.jpg" alt="Slash 2" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge musica">Música</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Slash 2</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="musica" onclick="abrirModal('motorhead.jpg','Motörhead')">
+      <div class="card-img-wrap">
+        <img src="motorhead.jpg" alt="Motorhead" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge musica">Música</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Motörhead</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="musica" onclick="abrirModal('slipknot.jpg','Slipknot')">
+      <div class="card-img-wrap">
+        <img src="slipknot.jpg" alt="Slipknot" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge musica">Música</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Slipknot</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="musica" onclick="abrirModal('ironmaiden2.jpg','Iron Maiden 2')">
+      <div class="card-img-wrap">
+        <img src="ironmaiden2.jpg" alt="Iron Maiden 2" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge musica">Música</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Iron Maiden 2</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="musica" onclick="abrirModal('guns.jpg','Guns N Roses')">
+      <div class="card-img-wrap">
+        <img src="guns.jpg" alt="Guns N Roses" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge musica">Música</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Guns N' Roses</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="musica" onclick="abrirModal('megadet.jpg','Megadeth')">
+      <div class="card-img-wrap">
+        <img src="megadet.jpg" alt="Megadeth" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge musica">Música</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Megadeth</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="musica" onclick="abrirModal('gorillaz.jpg','Gorillaz')">
+      <div class="card-img-wrap">
+        <img src="gorillaz.jpg" alt="Gorillaz" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge musica">Música</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Gorillaz</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="musica" onclick="abrirModal('gunss.jpg','Guns N Roses 2')">
+      <div class="card-img-wrap">
+        <img src="gunss.jpg" alt="Guns N Roses 2" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge musica">Música</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Guns N' Roses 2</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+    <div class="card" data-cat="musica" onclick="abrirModal('metalica.jpg','Metallica')">
+      <div class="card-img-wrap">
+        <img src="metalica.jpg" alt="Metallica" loading="lazy">
+        <div class="card-overlay"></div>
+        <span class="badge musica">Música</span>
+      </div>
+      <div class="card-info">
+        <span class="card-nombre">Metallica</span>
+        <span class="card-precio">$20.000</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal" onclick="cerrarModal()">
+  <button class="cerrar" onclick="cerrarModal()">&times;</button>
+  <img id="imgModal" alt="">
+  <div class="modal-info">
+    <div class="modal-nombre" id="modalNombre"></div>
+    <div class="modal-precio">$20.000</div>
+    <a id="btnConsultar" class="btn-consultar" href="#" target="_blank">Consultar por WhatsApp</a>
+  </div>
+</div>
+
+<!-- WHATSAPP FLOTANTE -->
+<a class="whatsapp" href="https://wa.me/543815314712?text=Hola%20quiero%20consultar%20por%20las%20remeras" target="_blank" title="WhatsApp">💬</a>
+
+<script>
+  const WA = 'https://wa.me/543815314712?text=';
+
+  function abrirModal(src, nombre) {
+    document.getElementById('imgModal').src = src;
+    document.getElementById('modalNombre').textContent = nombre;
+    document.getElementById('btnConsultar').href =
+      WA + encodeURIComponent('Hola! me interesa la remera de ' + nombre + ' 🙌');
+    document.getElementById('modal').classList.add('open');
+    event.stopPropagation();
+  }
+
+  function cerrarModal() {
+    document.getElementById('modal').classList.remove('open');
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarModal(); });
+
+  function filtrar(cat, btn) {
+    document.querySelectorAll('.filtros button').forEach(b => b.classList.remove('activo'));
+    btn.classList.add('activo');
+    const cards = document.querySelectorAll('.card');
+    let visibles = 0;
+    cards.forEach(c => {
+      const mostrar = cat === 'todos' || c.dataset.cat === cat;
+      c.classList.toggle('oculta', !mostrar);
+      if (mostrar) visibles++;
+    });
+    document.getElementById('contador').textContent = visibles + ' remeras';
+  }
+
+  filtrar('todos', document.querySelector('.filtros button.activo'));
+</script>
+</body>
+</html>
